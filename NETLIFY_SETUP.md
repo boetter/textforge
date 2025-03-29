@@ -216,16 +216,30 @@ Hvis byggeprocessen fejler:
 
 ### Function Timeouts
 
-Hvis Netlify Functions timer ud:
+Hvis Netlify Functions timer ud eller er langsomme:
 
-1. Overvej at øge timeout-indstillingen i `netlify.toml`:
+1. Sørg for at bruge den korrekte Node-runtime i `netlify.toml`:
+   ```toml
+   [build.environment]
+     AWS_LAMBDA_JS_RUNTIME = "nodejs18.x"
+   ```
+
+2. Kontroller at du bruger esbuild som bundler:
    ```toml
    [functions]
      node_bundler = "esbuild"
-     timeout = 30
    ```
 
-2. Optimer dine funktioner for hurtigere respons.
+3. Inkluder nødvendige filer for at undgå bundling-problemer:
+   ```toml
+   [functions.enhance]
+     included_files = ["shared/schema.js", "netlify/functions/ai-utils.js"]
+   ```
+
+4. Optimer dine funktioner for hurtigere respons ved at:
+   - Reducere størrelsen på anmodninger/svar
+   - Bruge memory-caching hvor det er muligt
+   - Undgå unødvendige API-kald
 
 ### Kontakt og support
 

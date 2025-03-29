@@ -42,13 +42,15 @@ export default function NotFound() {
                   <div>
                     <p className="text-sm text-amber-800 font-medium">Mulige årsager:</p>
                     <ul className="mt-2 text-xs text-amber-700 list-disc pl-4 space-y-1">
-                      <li>Manglende API-nøgler i Netlify miljøvariable</li>
-                      <li>Forkert konfiguration af Netlify Funktioner</li>
-                      <li>Problemer med redirects i Netlify konfigurationen</li>
+                      <li>Manglende API-nøgler i Netlify miljøvariable (OPENAI_API_KEY, ANTHROPIC_API_KEY, GOOGLE_API_KEY)</li>
+                      <li>Forkert konfiguration af Netlify Functions (tjek node_bundler og included_files)</li>
+                      <li>Problemer med redirects i netlify.toml (tjek om /api/* peger på /.netlify/functions/:splat)</li>
+                      <li>Ugyldigt filformat i importstier (manglende .js-endelser i produktionsmiljø)</li>
                     </ul>
                     <p className="mt-3 text-xs text-amber-800">
                       Se <span className="font-medium">NETLIFY_SETUP.md</span> for 
-                      mere information om fejlsøgning.
+                      mere information om fejlsøgning eller <span className="font-medium">logfiler i Netlify dashboard</span> 
+                      for specifikke fejlbeskeder.
                     </p>
                   </div>
                 </div>

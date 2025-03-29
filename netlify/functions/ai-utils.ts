@@ -44,7 +44,9 @@ export async function processWithClaude(
     throw new Error("Uventet svarformat fra Claude API");
   } catch (error) {
     console.error('Error processing with Claude:', error);
-    throw new Error(`Claude AI processing failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error('Detaljeret Claude API fejl:', JSON.stringify(error));
+    throw new Error(`Claude AI processing failed: ${errorMessage}. Kontroller at ANTHROPIC_API_KEY er korrekt konfigureret i Netlify miljøvariable.`);
   }
 }
 
@@ -68,7 +70,9 @@ export async function processWithGemini(
     return response.text();
   } catch (error) {
     console.error('Error processing with Gemini:', error);
-    throw new Error(`Gemini AI processing failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error('Detaljeret Gemini API fejl:', JSON.stringify(error));
+    throw new Error(`Gemini AI processing failed: ${errorMessage}. Kontroller at GOOGLE_API_KEY er korrekt konfigureret i Netlify miljøvariable.`);
   }
 }
 
@@ -95,7 +99,9 @@ export async function processWithGPT(
     return chatCompletion.choices[0].message.content || '';
   } catch (error) {
     console.error('Error processing with GPT:', error);
-    throw new Error(`GPT AI processing failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error('Detaljeret OpenAI API fejl:', JSON.stringify(error));
+    throw new Error(`GPT AI processing failed: ${errorMessage}. Kontroller at OPENAI_API_KEY er korrekt konfigureret i Netlify miljøvariable.`);
   }
 }
 

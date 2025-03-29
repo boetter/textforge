@@ -12,7 +12,15 @@
 
 [functions]
   node_bundler = "esbuild"
-  timeout = 30
+
+[build.environment]
+  AWS_LAMBDA_JS_RUNTIME = "nodejs18.x"
+  
+[functions.enhance]
+  included_files = ["shared/schema.js", "netlify/functions/ai-utils.js"]
+  
+# Vi kan ikke bruge timeout direkte som en enkelt værdi
+# timeout = 30 er ugyldig syntax i Netlify
 
 # Sørg for at API-kald til funktioner bliver korrekt routet
 [[redirects]]

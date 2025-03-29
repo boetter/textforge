@@ -15,6 +15,15 @@ export async function enhanceText(data: TextEnhanceRequest): Promise<TextEnhance
     // Først prøv direkte Netlify-funktion
     try {
       console.log("Kalder Netlify function på: " + `${NETLIFY_API_BASE}/enhance`);
+      console.log("Request data:", JSON.stringify({
+        model: data.model,
+        language: data.language,
+        textLength: data.originalText.length,
+        hasStyleGuide: data.styleGuide && data.styleGuide.length > 0,
+        hasExamples: data.exampleTexts && data.exampleTexts.length > 0,
+        hasInstructions: data.instructions && data.instructions.length > 0
+      }));
+      
       const response = await fetch(`${NETLIFY_API_BASE}/enhance`, {
         method: 'POST',
         headers: {
@@ -25,7 +34,15 @@ export async function enhanceText(data: TextEnhanceRequest): Promise<TextEnhance
       
       if (!response.ok) {
         console.error(`Netlify funktion fejlede med status: ${response.status} ${response.statusText}`);
-        throw new Error(`Netlify funktion fejlede: ${response.status} ${response.statusText}`);
+        // Forsøg at hente fejlbesked fra response body
+        try {
+          const errorData = await response.json();
+          console.error('Detaljeret fejl fra Netlify funktion:', errorData);
+          throw new Error(`Netlify funktion fejlede: ${errorData.message || errorData.error || response.statusText}`);
+        } catch (jsonError) {
+          // Hvis vi ikke kan parse response som JSON, brug standard fejl
+          throw new Error(`Netlify funktion fejlede: ${response.status} ${response.statusText}`);
+        }
       }
       
       return await response.json();
@@ -34,7 +51,7 @@ export async function enhanceText(data: TextEnhanceRequest): Promise<TextEnhance
       
       // Prøv via /api/ omdirigering (som omdirigeres til Netlify funktion via netlify.toml)
       try {
-        console.log("Prøver via /api/enhance");
+        console.log("Prøver via /api/enhance med netlify.toml redirect");
         const apiResponse = await fetch(`/api/enhance`, {
           method: 'POST',
           headers: {
@@ -45,7 +62,16 @@ export async function enhanceText(data: TextEnhanceRequest): Promise<TextEnhance
         
         if (!apiResponse.ok) {
           console.error(`API omdirigering fejlede med status: ${apiResponse.status} ${apiResponse.statusText}`);
-          throw new Error(`API omdirigering fejlede: ${apiResponse.status} ${apiResponse.statusText}`);
+          
+          // Forsøg at hente detaljeret fejlbesked
+          try {
+            const errorData = await apiResponse.json();
+            console.error('Detaljeret fejl fra API omdirigering:', errorData);
+            throw new Error(`API omdirigering fejlede: ${errorData.message || errorData.error || apiResponse.statusText}`);
+          } catch (jsonError) {
+            console.error('Kunne ikke parse error response fra API:', jsonError);
+            throw new Error(`API omdirigering fejlede: ${apiResponse.status} ${apiResponse.statusText}`);
+          }
         }
         
         return await apiResponse.json();
@@ -81,7 +107,16 @@ export async function getPresets(): Promise<Preset[]> {
       
       if (!response.ok) {
         console.error(`Netlify funktion fejlede med status: ${response.status} ${response.statusText}`);
-        throw new Error(`Netlify funktion fejlede: ${response.status} ${response.statusText}`);
+        
+        // Forsøg at hente fejlbesked fra response body
+        try {
+          const errorData = await response.json();
+          console.error('Detaljeret fejl fra Netlify funktion:', errorData);
+          throw new Error(`Netlify funktion fejlede: ${errorData.message || errorData.error || response.statusText}`);
+        } catch (jsonError) {
+          console.error('Kunne ikke parse error response fra Netlify funktion:', jsonError);
+          throw new Error(`Netlify funktion fejlede: ${response.status} ${response.statusText}`);
+        }
       }
       
       return await response.json();
