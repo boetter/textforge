@@ -9,7 +9,7 @@ function checkRequiredApiKeys(modelName: string): string | null {
       return process.env.ANTHROPIC_API_KEY ? null : "ANTHROPIC_API_KEY mangler i miljøvariabler";
     case "gemini":
       return process.env.GOOGLE_API_KEY ? null : "GOOGLE_API_KEY mangler i miljøvariabler";
-    case "gpt":
+    case "chatgpt": // Rettet fra "gpt" til "chatgpt" for at matche UI
       return process.env.OPENAI_API_KEY ? null : "OPENAI_API_KEY mangler i miljøvariabler";
     default:
       return `Ukendt model: ${modelName}`;
@@ -61,7 +61,8 @@ const handler: Handler = async (event: HandlerEvent) => {
         body: JSON.stringify({ 
           message: "API-nøgle mangler", 
           error: missingApiKey,
-          details: "API-nøglen skal konfigureres i Netlify miljøvariable for at bruge denne model."
+          model: model,
+          details: "API-nøglen skal konfigureres i Netlify miljøvariable for at bruge denne model. Gå til Netlify-dashboardet, vælg dit site, klik på 'Site settings' > 'Environment variables', og tilføj den nødvendige API-nøgle."
         }),
       };
     }

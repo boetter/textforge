@@ -137,9 +137,31 @@ export default function ResultDisplay({
         
         {/* Error state */}
         {error && !isLoading && (
-          <div className="flex flex-col h-full items-center justify-center text-red-500">
+          <div className="flex flex-col h-full items-center justify-center text-red-500 px-6">
             <AlertCircle className="h-14 w-14 mb-5" />
-            <p className="text-xl text-center">{error}</p>
+            <div className="text-center max-w-xl">
+              <p className="text-xl mb-3">{error.split('\n\n')[0]}</p>
+              
+              {/* Vis instruktioner hvis det er en API-nøgle fejl */}
+              {error.includes('API-nøgle') && (
+                <div className="mt-6 bg-red-50 border border-red-200 rounded-lg p-4 text-left text-red-700">
+                  <h3 className="font-bold mb-2">Sådan tilføjer du API-nøglen:</h3>
+                  <ol className="list-decimal list-inside space-y-2">
+                    <li>Gå til <a href="https://app.netlify.com/sites/" target="_blank" rel="noopener noreferrer" className="underline">Netlify dashboard</a></li>
+                    <li>Vælg dit site</li>
+                    <li>Gå til <strong>Site settings</strong> &gt; <strong>Environment variables</strong></li>
+                    <li>Klik på <strong>Add a variable</strong></li>
+                    <li>Tilføj den nødvendige API-nøgle</li>
+                    <li>Genindlæs siden efter du har gemt ændringerne</li>
+                  </ol>
+                </div>
+              )}
+              
+              {/* Vis eventuelt flere detaljer */}
+              {error.split('\n\n').length > 1 && (
+                <p className="text-sm mt-4 text-red-600">{error.split('\n\n')[1]}</p>
+              )}
+            </div>
           </div>
         )}
         

@@ -82,13 +82,38 @@ export default function TextInputArea({
       const result = await enhanceText(data);
       setResult(result);
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Der opstod en ukendt fejl";
-      setError(message);
+      let message = err instanceof Error ? err.message : "Der opstod en ukendt fejl";
+      let title = "Fejl ved forbedring af teksten";
+      let details = "";
+      
+      // Tjek for manglende API-nøgle fejl
+      if (typeof message === 'string') {
+        if (message.includes('ANTHROPIC_API_KEY mangler') || 
+            message.includes('API-nøgle mangler') && data.model === 'claude') {
+          title = "Claude API-nøgle mangler";
+          details = "Du skal tilføje en Anthropic API-nøgle i Netlify miljøvariable for at bruge Claude-modellen.";
+          message = "For at bruge Claude, skal du tilføje en gyldig Anthropic API-nøgle i dine Netlify miljøvariable.";
+        } else if (message.includes('GOOGLE_API_KEY mangler') || 
+                  message.includes('API-nøgle mangler') && data.model === 'gemini') {
+          title = "Gemini API-nøgle mangler";
+          details = "Du skal tilføje en Google API-nøgle i Netlify miljøvariable for at bruge Gemini-modellen.";
+          message = "For at bruge Gemini, skal du tilføje en gyldig Google API-nøgle i dine Netlify miljøvariable.";
+        } else if (message.includes('OPENAI_API_KEY mangler') || 
+                  message.includes('API-nøgle mangler') && data.model === 'chatgpt') {
+          title = "OpenAI API-nøgle mangler";
+          details = "Du skal tilføje en OpenAI API-nøgle i Netlify miljøvariable for at bruge GPT-modellen.";
+          message = "For at bruge GPT-4o, skal du tilføje en gyldig OpenAI API-nøgle i dine Netlify miljøvariable.";
+        }
+      }
+      
+      setError(message + (details ? "\n\n" + details : ""));
       toast({
-        title: "Fejl ved forbedring af teksten",
+        title: title,
         description: message,
         variant: "destructive"
       });
+      
+      console.error("Detaljeret fejl:", { message, title, details, originalError: err });
     } finally {
       setIsLoading(false);
     }
