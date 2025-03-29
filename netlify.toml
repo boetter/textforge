@@ -10,7 +10,6 @@
   publish = "dist"
   autoLaunch = true
 
-# Fjernet den problematiske redirect for /.netlify/functions/*
 # Netlify håndterer automatisk routing til funktioner
 
 [[redirects]]
