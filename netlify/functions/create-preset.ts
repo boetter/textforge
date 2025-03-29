@@ -1,6 +1,6 @@
 import { Handler, HandlerEvent } from "@netlify/functions";
-import { presetSchema } from "../../shared/schema";
-import { createPreset } from "./storage-utils";
+import { presetSchema } from "../../shared/schema.js";
+import { createPreset } from "./storage-utils.js";
 
 const handler: Handler = async (event: HandlerEvent) => {
   // Kun tillad POST-metoden

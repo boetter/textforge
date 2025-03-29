@@ -1,5 +1,5 @@
 import { Handler, HandlerEvent } from "@netlify/functions";
-import { getPreset } from "./storage-utils";
+import { getPreset } from "./storage-utils.js";
 
 const handler: Handler = async (event: HandlerEvent) => {
   // Kun tillad GET-metoden

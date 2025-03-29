@@ -1,6 +1,6 @@
 import { Handler, HandlerEvent } from "@netlify/functions";
-import { textEnhanceSchema } from "../../shared/schema";
-import { processWithClaude, processWithGemini, processWithGPT } from "./ai-utils";
+import { textEnhanceSchema } from "../../shared/schema.js";
+import { processWithClaude, processWithGemini, processWithGPT } from "./ai-utils.js";
 
 const handler: Handler = async (event: HandlerEvent) => {
   // Kun tillad POST-metoden

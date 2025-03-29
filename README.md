@@ -1,86 +1,102 @@
 # Text Enhance AI
 
-En avanceret tekstforbedrer, der bruger multiple AI-modeller til at forbedre og omskrive tekst baseret på brugerdefinerede stilguider og eksempler.
+En multifunktionel AI-tekstforbedrer, der bruger flere modeller til at forbedre dine tekster baseret på dine stilguider og eksempler.
 
-## Oversigt
+## Funktioner
 
-Text Enhance AI er en webapplikation, der giver brugere mulighed for at:
-
-- Vælge mellem forskellige AI-modeller (GPT-4o, Claude 3.7 Sonnet, Gemini 2.5 Pro)
-- Definere stilguider til at styre tekstforbedringer
-- Tilføje eksempeltekster som reference for tone og stil
-- Gemme og genbruge præferencer som presets
+- **Multi-Model AI Support**: Vælg mellem Claude 3.7 Sonnet, Gemini 2.5 Pro Experimental eller GPT-4o
+- **Stilguide**: Definer klare regler for, hvordan din tekst skal forbedres
+- **Eksempeltekster**: Giv eksempler på den tone og stil, du ønsker
+- **Brugerdefinerede instruktioner**: Giv specifikke anvisninger til AI'en
+- **Presets**: Gem dine favorit stilguider og eksempler til fremtidig brug
+- **Sprogsupport**: Vælg mellem dansk, norsk, svensk og engelsk
+- **Modern UI**: Ren, moderne brugergrænseflade med fokus på brugervenlighed
 
 ## Teknologier
 
-- Frontend: React, TailwindCSS, ShadcnUI, TipTap editor
-- Backend: Netlify Functions (serverless)
-- AI-integration: OpenAI, Anthropic, Google Generative AI
+- **Frontend**: React, TypeScript, Vite, TailwindCSS, Shadcn/UI
+- **Serverless Functions**: Netlify Functions (tidl. Node.js + Express)
+- **AI Integration**: Claude 3.7 Sonnet, Gemini 2.5 Pro Experimental, GPT-4o
 
-## Forudsætninger
+## Kom i gang - Netlify Deployment
 
-For at køre applikationen skal du have:
+### Forudsætninger
 
-- Node.js (version 18 eller nyere)
-- API-nøgler til de AI-modeller, du ønsker at bruge:
-  - OPENAI_API_KEY
-  - ANTHROPIC_API_KEY
-  - GOOGLE_API_KEY
+- Node.js 18+ installeret
+- En Netlify-konto
+- Adgang til følgende API-nøgler:
+  - OpenAI API Key for GPT-4o
+  - Anthropic API Key for Claude 3.7 Sonnet
+  - Google AI API Key for Gemini 2.5 Pro Experimental
 
-## Lokal kørsel
+### Installation
 
-1. Installer afhængigheder:
+1. Clone repositoriet:
+   ```bash
+   git clone https://github.com/dit-brugernavn/text-enhance-ai.git
+   cd text-enhance-ai
    ```
+
+2. Installer afhængigheder:
+   ```bash
    npm install
    ```
 
-2. Start udviklingsserveren:
-   ```
-   npm run dev
-   ```
+3. Tilføj miljøvariable i Netlify Dashboard:
+   - `OPENAI_API_KEY`: Din OpenAI API-nøgle
+   - `ANTHROPIC_API_KEY`: Din Anthropic API-nøgle
+   - `GOOGLE_API_KEY`: Din Google AI API-nøgle
 
-## Deployment på Netlify
+### Udvikling
 
-For at deployere applikationen på Netlify, følg disse trin:
+Start udviklingsserveren:
 
-1. Opret en konto på [Netlify](https://netlify.com) hvis du ikke allerede har en.
+```bash
+npm run dev
+```
 
-2. Inden deployment, opdater følgende filer med de versioner, der er inkluderet i dette projekt:
-   - Erstat `netlify.toml` med `updated_netlify.toml`
-   - Erstat `tsconfig.json` med `updated_tsconfig.json`
-   - Erstat `vite.config.ts` med `updated_vite.config.ts`
-   - Erstat `package.json` med `updated_package.json`
+Besøg [http://localhost:3000](http://localhost:3000) for at se applikationen.
 
-3. Konfigurer miljøvariabler på Netlify:
-   - OPENAI_API_KEY
-   - ANTHROPIC_API_KEY
-   - GOOGLE_API_KEY
+### Deployment
 
-4. Deploy projektet via GitHub-integration eller manuel upload:
-   - GitHub-integration: Forbind dit GitHub-repository til Netlify
-   - Manuel upload: Kør `npm run build` og upload indholdet af `dist`-mappen
+Projektet er klar til deployment på Netlify. Vi har oprettet disse specielle filer for at lette Netlify-deployment:
 
-## Projektstruktur
+- `netlify.toml`: Konfiguration for Netlify-byggeprocesen
+- `netlify/functions/`: Serverless functions for AI-integration og preset-administration
 
-- `client/`: Frontend React applikation
-  - `src/components/`: UI-komponenter
-  - `src/lib/`: Hjælpefunktioner
-  - `src/pages/`: Applikationens sider
-  
-- `netlify/functions/`: Serverless Netlify-funktioner
-  - `ai-utils.ts`: AI-modelintegration
-  - `enhance.ts`: Hovedfunktion til tekstforbedring
-  - `storage-utils.ts`: Håndtering af presets
+Brug Netlify CLI til at deploye:
 
-- `shared/`: Delt kode mellem frontend og backend
-  - `schema.ts`: Typescript-typer og Zod-validering
+```bash
+npm install netlify-cli -g
+netlify init
+netlify deploy --prod
+```
 
-## API Nøgler
+### Vigtige Forbedringer for Netlify Deployment
 
-Applikationen kræver API-nøgler for at fungere korrekt:
+Vi har foretaget følgende ændringer for at sikre korrekt deployment på Netlify:
 
-1. OpenAI API-nøgle: [Opret her](https://platform.openai.com/api-keys)
-2. Anthropic API-nøgle: [Opret her](https://console.anthropic.com/keys)
-3. Google API-nøgle: [Opret her](https://makersuite.google.com/app/apikey)
+1. **Filnavne i imports**: Sørget for at alle importstier i Netlify Functions bruger eksplicitte `.js` filtyper, hvilket er påkrævet af Node.js' ESM-modul system.
 
-Tilføj disse som miljøvariabler i din Netlify-konfiguration under "Site settings > Environment variables".
+2. **Redirect håndtering**: Tilføjet korrekte regler i både `netlify.toml` og `_redirects` for at sikre, at single-page application routing fungerer korrekt.
+
+3. **Build-directory struktur**: Konfigureret output mappen til at være kompatibel med Netlify's forventninger.
+
+## Anvendelse
+
+1. Åbn applikationen i din browser
+2. Indtast din oprindelige tekst i tekstfeltet
+3. Vælg AI-model fra dropdown-menuen
+4. Indtast en stilguide for at definere, hvordan din tekst skal forbedres
+5. (Valgfrit) Tilføj eksempeltekster
+6. (Valgfrit) Tilføj specifikke instruktioner
+7. Klik på "Forbedre tekst"
+8. Kopiér den forbedrede tekst eller gem stilguiden som et preset til senere brug
+
+## Licensering
+
+Dette projekt er licenseret under MIT-licensen. Se `LICENSE` filen for detaljer.
+
+## Bidrag
+
+Bidrag er velkomne! For større ændringer, åbn venligst et issue først for at diskutere, hvad du gerne vil ændre.

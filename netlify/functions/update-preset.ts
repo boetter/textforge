@@ -1,6 +1,6 @@
 import { Handler, HandlerEvent } from "@netlify/functions";
-import { presetSchema } from "../../shared/schema";
-import { updatePreset } from "./storage-utils";
+import { presetSchema } from "../../shared/schema.js";
+import { updatePreset } from "./storage-utils.js";
 
 const handler: Handler = async (event: HandlerEvent) => {
   // Kun tillad PUT-metoden

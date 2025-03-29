@@ -1,4 +1,4 @@
-import { Preset } from "../../shared/schema";
+import { Preset } from "../../shared/schema.js";
 
 // Vi bruger localStorage i Netlify Functions ved hjælp af en global variabel
 // Dette er ikke en ideel løsning for produktion, men fungerer til demo-formål

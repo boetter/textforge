@@ -1,5 +1,5 @@
 import { Handler, HandlerEvent } from "@netlify/functions";
-import { deletePreset } from "./storage-utils";
+import { deletePreset } from "./storage-utils.js";
 
 const handler: Handler = async (event: HandlerEvent) => {
   // Kun tillad DELETE-metoden
