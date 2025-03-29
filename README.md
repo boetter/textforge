@@ -97,6 +97,47 @@ Vi har foretaget følgende ændringer for at sikre korrekt deployment på Netlif
 
 Dette projekt er licenseret under MIT-licensen. Se `LICENSE` filen for detaljer.
 
+## Fejlfinding
+
+### 404-fejl på API-kald til Netlify Functions
+
+Hvis du oplever 404-fejl, når applikationen forsøger at kalde Netlify Functions:
+
+1. **Kontroller netlify.toml**: Sørg for at din `netlify.toml` fil har korrekte stier:
+   ```toml
+   [build]
+     publish = "dist/public"  # Matcher din vite.config.ts output-mappe
+     functions = "netlify/functions"  # Korrekt sti til funktionsmappen
+   
+   [[redirects]]
+     from = "/.netlify/functions/*"
+     to = "/.netlify/functions/:splat"
+     status = 200
+   ```
+
+2. **Tjek filnavne og imports**: Alle Netlify-funktioner skal bruge `.js` i deres imports:
+   ```typescript
+   // Korrekt
+   import { something } from "./other-file.js";
+   
+   // Forkert
+   import { something } from "./other-file";
+   ```
+
+3. **Funktionsstruktur**: Hver funktion skal eksportere en handler:
+   ```typescript
+   export { handler };
+   ```
+
+4. **Test lokalt med Netlify Dev**: Brug Netlify CLI til at teste lokalt:
+   ```bash
+   netlify dev
+   ```
+
+5. **Tjek API-nøgler**: Sørg for at have konfigureret alle nødvendige API-nøgler i Netlify miljøvariable.
+
+For mere detaljeret fejlfinding, se [NETLIFY_SETUP.md](NETLIFY_SETUP.md)
+
 ## Bidrag
 
 Bidrag er velkomne! For større ændringer, åbn venligst et issue først for at diskutere, hvad du gerne vil ændre.

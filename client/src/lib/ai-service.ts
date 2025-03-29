@@ -12,8 +12,9 @@ export async function enhanceText(data: TextEnhanceRequest): Promise<TextEnhance
   try {
     console.log("Sender anmodning om tekstforbedring");
     
-    // Først prøv Netlify-funktion
+    // Først prøv direkte Netlify-funktion
     try {
+      console.log("Kalder Netlify function på: " + `${NETLIFY_API_BASE}/enhance`);
       const response = await fetch(`${NETLIFY_API_BASE}/enhance`, {
         method: 'POST',
         headers: {
@@ -23,19 +24,41 @@ export async function enhanceText(data: TextEnhanceRequest): Promise<TextEnhance
       });
       
       if (!response.ok) {
+        console.error(`Netlify funktion fejlede med status: ${response.status} ${response.statusText}`);
         throw new Error(`Netlify funktion fejlede: ${response.status} ${response.statusText}`);
       }
       
       return await response.json();
     } catch (netlifyError) {
-      console.warn('Netlify funktion fejlede, prøver fallback til Express:', netlifyError);
+      console.warn('Netlify funktion fejlede, prøver fallback til /api/enhance:', netlifyError);
       
-      // Fallback til Express-endepunkt hvis Netlify-funktionen fejler
-      return await apiRequest<TextEnhanceResponse>({
-        url: "/api/enhance",
-        method: "POST",
-        body: data
-      });
+      // Prøv via /api/ omdirigering (som omdirigeres til Netlify funktion via netlify.toml)
+      try {
+        console.log("Prøver via /api/enhance");
+        const apiResponse = await fetch(`/api/enhance`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        });
+        
+        if (!apiResponse.ok) {
+          console.error(`API omdirigering fejlede med status: ${apiResponse.status} ${apiResponse.statusText}`);
+          throw new Error(`API omdirigering fejlede: ${apiResponse.status} ${apiResponse.statusText}`);
+        }
+        
+        return await apiResponse.json();
+      } catch (apiError) {
+        console.warn('API omdirigering fejlede, prøver Express fallback:', apiError);
+        
+        // Fallback til Express-endepunkt hvis alt andet fejler
+        return await apiRequest<TextEnhanceResponse>({
+          url: "/api/enhance",
+          method: "POST",
+          body: data
+        });
+      }
     }
   } catch (error) {
     console.error(`Fejl ved forbedring af tekst:`, error);
@@ -51,20 +74,37 @@ export async function enhanceText(data: TextEnhanceRequest): Promise<TextEnhance
  */
 export async function getPresets(): Promise<Preset[]> {
   try {
-    // Første prøv Netlify-funktion
+    // Først prøv direkte Netlify-funktion
     try {
+      console.log("Kalder Netlify function på: " + `${NETLIFY_API_BASE}/get-presets`);
       const response = await fetch(`${NETLIFY_API_BASE}/get-presets`);
       
       if (!response.ok) {
+        console.error(`Netlify funktion fejlede med status: ${response.status} ${response.statusText}`);
         throw new Error(`Netlify funktion fejlede: ${response.status} ${response.statusText}`);
       }
       
       return await response.json();
     } catch (netlifyError) {
-      console.warn('Netlify funktion fejlede, prøver fallback til Express:', netlifyError);
+      console.warn('Netlify funktion fejlede, prøver fallback til /api/presets:', netlifyError);
       
-      // Fallback til Express-endepunkt
-      return await apiRequest<Preset[]>({ url: "/api/presets" });
+      // Prøv via /api/ omdirigering
+      try {
+        console.log("Prøver via /api/presets");
+        const apiResponse = await fetch(`/api/presets`);
+        
+        if (!apiResponse.ok) {
+          console.error(`API omdirigering fejlede med status: ${apiResponse.status} ${apiResponse.statusText}`);
+          throw new Error(`API omdirigering fejlede: ${apiResponse.status} ${apiResponse.statusText}`);
+        }
+        
+        return await apiResponse.json();
+      } catch (apiError) {
+        console.warn('API omdirigering fejlede, prøver Express fallback:', apiError);
+        
+        // Fallback til Express-endepunkt
+        return await apiRequest<Preset[]>({ url: "/api/presets" });
+      }
     }
   } catch (error) {
     console.warn("Kunne ikke hente presets fra API, falder tilbage til localStorage:", error);

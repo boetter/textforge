@@ -10,8 +10,23 @@
   publish = "dist"
   autoLaunch = true
 
-# Netlify håndterer automatisk routing til funktioner
+[functions]
+  node_bundler = "esbuild"
+  timeout = 30
 
+# Sørg for at API-kald til funktioner bliver korrekt routet
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+
+# Også behold direkte adgang til Netlify funktioner
+[[redirects]]
+  from = "/.netlify/functions/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+
+# Alle andre stier går til single-page applikation
 [[redirects]]
   from = "/*"
   to = "/index.html"
