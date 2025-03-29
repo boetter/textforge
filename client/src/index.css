@@ -1,0 +1,197 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply antialiased bg-background text-foreground;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight text-gray-800;
+  }
+  
+  h1 {
+    @apply text-3xl md:text-4xl;
+  }
+  
+  h2 {
+    @apply text-2xl md:text-3xl;
+  }
+  
+  h3 {
+    @apply text-xl md:text-2xl;
+  }
+}
+
+/* Rich Text Editor Styling */
+.ProseMirror {
+  @apply min-h-full text-gray-800 text-base leading-relaxed;
+  outline: none;
+}
+
+.ProseMirror p {
+  @apply mb-3;
+}
+
+.ProseMirror ul {
+  @apply list-disc pl-5 mb-3;
+}
+
+.ProseMirror ol {
+  @apply list-decimal pl-5 mb-3;
+}
+
+.ProseMirror h1 {
+  @apply text-2xl font-bold mb-3;
+}
+
+.ProseMirror h2 {
+  @apply text-xl font-bold mb-3;
+}
+
+.ProseMirror h3 {
+  @apply text-lg font-bold mb-3;
+}
+
+.ProseMirror blockquote {
+  @apply border-l-4 border-gray-300 pl-4 italic my-4;
+}
+
+.ProseMirror a {
+  @apply text-primary underline;
+}
+
+.ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  @apply text-gray-400 pointer-events-none h-0 float-left;
+}
+
+.ProseMirror .text-left {
+  text-align: left;
+}
+
+.ProseMirror .text-center {
+  text-align: center;
+}
+
+.ProseMirror .text-right {
+  text-align: right;
+}
+
+/* TipTap highlight extension style */
+.ProseMirror mark {
+  @apply bg-yellow-100 px-0.5 py-0 rounded;
+}
+
+/* TipTap typografi-forbedringer */
+.ProseMirror .typography-quotes {
+  quotes: """ """ "'" "'";
+}
+
+.ProseMirror .typography-quotes:before {
+  content: open-quote;
+}
+
+.ProseMirror .typography-quotes:after {
+  content: close-quote;
+}
+
+@layer components {
+  .app-container {
+    @apply w-[90%] mx-auto px-4 py-8 md:px-6 md:py-12;
+  }
+  
+  .app-content {
+    @apply flex flex-col lg:flex-row gap-10 lg:gap-16;
+  }
+  
+  .app-section {
+    @apply flex-1 min-w-0 lg:w-1/2;
+  }
+  
+  .card {
+    @apply rounded-2xl border border-gray-100 bg-white text-gray-800 shadow-md;
+  }
+  
+  .card-header {
+    @apply flex flex-col space-y-2.5 p-8 pb-4 border-b border-gray-50;
+  }
+  
+  .card-title {
+    @apply text-2xl font-semibold leading-relaxed tracking-tight mb-1;
+  }
+  
+  .card-description {
+    @apply text-sm text-gray-500;
+  }
+  
+  .card-content {
+    @apply p-8;
+  }
+  
+  .card-footer {
+    @apply flex items-center p-6 pt-3 border-t border-gray-50;
+  }
+  
+  .button-primary {
+    @apply bg-primary hover:bg-primary/90 text-white transition-colors shadow-md hover:shadow-lg;
+  }
+  
+  .textarea-enhanced {
+    @apply min-h-36 p-6 text-base rounded-xl border border-gray-200 
+      bg-white shadow-sm cursor-text
+      focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary/50 
+      focus-visible:border-primary/50 transition-all duration-200 leading-relaxed
+      hover:bg-gray-50/70 hover:shadow focus:bg-white focus:shadow;
+  }
+  
+  /* Click-to-edit hint for textareas */
+  .textarea-enhanced:not(:focus)::before {
+    content: "Klik for at redigere";
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    color: #888;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+  
+  .textarea-enhanced:not(:focus):hover::before {
+    opacity: 1;
+  }
+  
+  .loading-spinner {
+    @apply animate-spin h-8 w-8 text-primary;
+  }
+  
+  .form-group {
+    @apply space-y-4 mb-8;
+  }
+  
+  .label-enhanced {
+    @apply text-lg font-medium text-gray-700 mb-3 block;
+  }
+  
+  .input-enhanced {
+    @apply rounded-xl text-base py-3.5 px-5 border-gray-200 shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary/50 focus-visible:border-primary/50 transition-colors leading-relaxed;
+  }
+  
+  .preset-selector {
+    @apply p-5 rounded-xl border border-gray-100 bg-white hover:bg-gray-50 cursor-pointer transition-colors shadow-sm hover:shadow;
+  }
+  
+  .preset-selector.active {
+    @apply ring-2 ring-primary/50 bg-primary/5;
+  }
+}
