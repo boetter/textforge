@@ -61,7 +61,8 @@ export async function processWithGemini(
   try {
     const prompt = buildPrompt(text, styleGuide, exampleTexts, language, instructions);
     
-    const geminiModel = gemini.getGenerativeModel({ model: "gemini-1.5-pro" });
+    // Bruger den nyeste Gemini 2.5 Pro Experimental model
+    const geminiModel = gemini.getGenerativeModel({ model: "gemini-2.5-pro-experimental" });
     const result = await geminiModel.generateContent(prompt);
     const response = result.response;
     return response.text();

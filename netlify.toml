@@ -10,10 +10,8 @@
   publish = "dist"
   autoLaunch = true
 
-[[redirects]]
-  from = "/.netlify/functions/*"
-  to = "/.netlify/functions/:splat"
-  status = 200
+# Fjernet den problematiske redirect for /.netlify/functions/*
+# Netlify håndterer automatisk routing til funktioner
 
 [[redirects]]
   from = "/*"
